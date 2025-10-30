@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система заблокирована</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Ransomware Screen */
+        #ransomwareScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a0000 0%, #330000 50%, #1a0000 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            overflow-y: auto;
+            animation: backgroundPulse 3s infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% { background: linear-gradient(135deg, #1a0000 0%, #330000 50%, #1a0000 100%); }
+            100% { background: linear-gradient(135deg, #330000 0%, #4d0000 50%, #330000 100%); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        .warning-icon {
+            font-size: 80px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .main-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+            margin: 20px 0;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; }
+            50%, 99% { opacity: 0.3; }
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #ffcccc;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .content-wrapper {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .info-box {
+            background: rgba(255, 0, 0, 0.2);
+            border: 3px solid #ff0000;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .info-box h3 {
+            font-size: 22px;
+            color: #ff3333;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .status-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .status-list li {
+            font-size: 16px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-list li:before {
+            content: "❌ ";
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        /* Ransom Section */
+        .ransom-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 4px solid #ff0000;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: borderPulse 2s infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { border-color: #ff0000; box-shadow: 0 0 20px #ff0000; }
+            50% { border-color: #ff6666; box-shadow: 0 0 40px #ff6666; }
+        }
+
+        .ransom-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            margin: 20px 0;
+        }
+
+        .ransom-info {
+            font-size: 18px;
+            margin: 10px 0;
+            background: rgba(255, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .ransom-info strong {
+            color: #ffff00;
+        }
+
+        /* Timer */
+        .timer {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ff0000;
+            background: rgba(255, 255, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-shadow: 0 0 10px #ff0000;
+            animation: timerBlink 1s infinite;
+        }
+
+        @keyframes timerBlink {
+            0%, 50%, 100% { color: #ff0000; }
+            25%, 75% { color: #ff6666; }
+        }
+
+        /* Warning Messages */
+        .warning-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-list li {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 0, 0, 0.2);
+            border-left: 4px solid #ff0000;
+            border-radius: 5px;
+        }
+
+        /* System Info */
+        .system-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .system-info-item {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+
+        .system-info-label {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .system-info-value {
+            color: #ff6666;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Educational Notice */
+        .education-notice {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffff00;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 2px solid #ffff00;
+            z-index: 1000;
+            animation: noticePulse 2s infinite;
+        }
+
+        @keyframes noticePulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .hidden-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 10px;
+            cursor: pointer;
+            opacity: 0.1;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .hidden-button:hover {
+            opacity: 0.8;
+        }
+
+        /* Exit Screen */
+        #exitScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #134252 0%, #1a5266 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .exit-container {
+            max-width: 900px;
+            width: 100%;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .exit-icon {
+            font-size: 80px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .exit-title {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            color: #32b8c6;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .exit-explanation {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+            border: 2px solid rgba(50, 184, 198, 0.3);
+        }
+
+        .learning-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(50, 184, 198, 0.3);
+        }
+
+        .learning-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #32b8c6;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .learning-title:before {
+            content: "✓";
+            background: #32b8c6;
+            color: #134252;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .learning-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .learning-points li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .learning-points li:before {
+            content: "•";
+            position: absolute;
+            left: 10px;
+            color: #32b8c6;
+            font-size: 20px;
+        }
+
+        .exit-button {
+            display: block;
+            width: 300px;
+            margin: 30px auto 0;
+            padding: 15px 30px;
+            background: #32b8c6;
+            color: #134252;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .exit-button:hover {
+            background: #2da6b2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 28px;
+            }
+            .subtitle {
+                font-size: 18px;
+            }
+            .ransom-amount {
+                font-size: 36px;
+            }
+            .timer {
+                font-size: 24px;
+            }
+            .system-info {
+                grid-template-columns: 1fr;
+            }
+            .exit-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ransomware Screen -->
+    <div id="ransomwareScreen">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="warning-icon">🚨</div>
+            <h1 class="main-title">⚠️ ВАША СИСТЕМА ЗАБЛОКИРОВАНА ⚠️</h1>
+            <p class="subtitle">ВИРУС-ВЫМОГАТЕЛЬ ОБНАРУЖЕН!</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <!-- System Status -->
+            <div class="info-box">
+                <h3>⛔ СТАТУС СИСТЕМЫ</h3>
+                <ul class="status-list">
+                    <li>Все файлы зашифрованы криптографическим алгоритмом AES-256</li>
+                    <li>Доступ к системе запрещен администратором</li>
+                    <li>Интернет-соединение отключено для безопасности</li>
+                    <li>Диспетчер задач отключен системой</li>
+                    <li>Все запущенные программы остановлены</li>
+                    <li>Восстановление системы невозможно</li>
+                </ul>
+            </div>
+
+            <!-- Ransom Demand -->
+            <div class="ransom-box">
+                <h3>💰 ТРЕБОВАНИЕ ВЫКУПА</h3>
+                <div class="ransom-amount">50 рублей</div>
+                <div class="ransom-info">
+                    <strong>Счет:</strong> 40817810012345678901
+                </div>
+                <div class="ransom-info">
+                    <strong>Телефон:</strong> +7 999 123 45 67
+                </div>
+                <div class="ransom-info">
+                    Отправьте SMS с кодом платежа на номер телефона
+                </div>
+                <div class="timer" id="timer">ОСТАЛОСЬ: 23:59:42</div>
+            </div>
+
+            <!-- Warning Messages -->
+            <div class="info-box">
+                <h3>⚠️ ВНИМАНИЕ!</h3>
+                <ul class="warning-list">
+                    <li>⚠️ Не пытайтесь перезагрузить компьютер - это ускорит удаление файлов</li>
+                    <li>⚠️ Попытка закрыть это окно зарегистрирована</li>
+                    <li>⚠️ Все ваши личные фото будут удалены через 24 часа</li>
+                    <li>⚠️ Резервные копии также зашифрованы</li>
+                    <li>⚠️ Восстановление данных стоит в 10 раз дороже</li>
+                </ul>
+            </div>
+
+            <!-- System Information -->
+            <div class="info-box">
+                <h3>💻 ИНФОРМАЦИЯ О СИСТЕМЕ</h3>
+                <div class="system-info">
+                    <div class="system-info-item">
+                        <div class="system-info-label">ID компьютера</div>
+                        <div class="system-info-value">WINDOWS-PC-2025-X7K9</div>
+                    </div>
+                    <div class="system-info-item">
+                        <div class="system-info-label">IP адрес</div>
+                        <div class="system-info-value">192.168.1.100</div>
+                    </div>
+                    <div class="system-info-item">
+                        <div class="system-info-label">Операционная система</div>
+                        <div class="system-info-value">Windows 10 Pro</div>
+                    </div>
+                    <div class="system-info-item">
+                        <div class="system-info-label">Статус</div>
+                        <div class="system-info-value">КРИТИЧЕСКИЙ - ЗАБЛОКИРОВАНО</div>
+                    </div>
+                    <div class="system-info-item">
+                        <div class="system-info-label">Зашифровано файлов</div>
+                        <div class="system-info-value">47,382</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Notice -->
+        <div class="education-notice">
+            ⚠️ ЭТО СИМУЛЯЦИЯ ДЛЯ ОБУЧЕНИЯ | Нажми ESC для выхода
+        </div>
+
+        <!-- Hidden Exit Button -->
+        <button class="hidden-button" onclick="showExitScreen()" title="Это учебное пособие">
+            Это учебное пособие
+        </button>
+    </div>
+
+    <!-- Exit Screen -->
+    <div id="exitScreen" class="hidden">
+        <div class="exit-container">
+            <div class="exit-icon">🎓</div>
+            <h1 class="exit-title">ЭТО БЫЛА УЧЕБНАЯ СИМУЛЯЦИЯ</h1>
+            
+            <div class="exit-explanation">
+                Вы только что видели, как выглядит реальный вирус-блокировщик (ransomware). Это было обучающее пособие для урока по кибербезопасности. Никакой реальной опасности не было!
+            </div>
+
+            <!-- Learning Section 1 -->
+            <div class="learning-section">
+                <h2 class="learning-title">Признаки вируса-блокировщика</h2>
+                <ul class="learning-points">
+                    <li>Полноэкранное сообщение с угрозами</li>
+                    <li>Требование денег или личных данных</li>
+                    <li>Якобы 'официальные' ошибки системы</li>
+                    <li>Искусственная срочность и паника</li>
+                    <li>Невозможность закрыть окно (в реальном вирусе)</li>
+                </ul>
+            </div>
+
+            <!-- Learning Section 2 -->
+            <div class="learning-section">
+                <h2 class="learning-title">Как это работает?</h2>
+                <ul class="learning-points">
+                    <li>Психологическая манипуляция (страх, срочность)</li>
+                    <li>Имитация системных сообщений</li>
+                    <li>Блокировка системы (в реальности - очень сложно)</li>
+                    <li>Вымогательство денег</li>
+                </ul>
+            </div>
+
+            <!-- Learning Section 3 -->
+            <div class="learning-section">
+                <h2 class="learning-title">Как защитить себя?</h2>
+                <ul class="learning-points">
+                    <li>Никогда не платите - это не поможет</li>
+                    <li>Используй антивирус и обновляй ОС</li>
+                    <li>Делай резервные копии файлов</li>
+                    <li>Не открывай подозрительные письма и ссылки</li>
+                    <li>Спроси у взрослых при сомнениях</li>
+                </ul>
+            </div>
+
+            <!-- Learning Section 4 -->
+            <div class="learning-section">
+                <h2 class="learning-title">Что делать при встрече с вирусом?</h2>
+                <ul class="learning-points">
+                    <li>Не паникуй - это просто программа</li>
+                    <li>Попробуй закрыть браузер или перезагрузиться</li>
+                    <li>Если не получается - обратись к родителям или специалисту</li>
+                    <li>Никогда не переводи деньги!</li>
+                    <li>Сообщи в полицию (киберполиция.рф)</li>
+                </ul>
+            </div>
+
+            <button class="exit-button" onclick="location.reload()">Вернуться на главную</button>
+        </div>
+    </div>
+
+    <script>
+        // Disable right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // ESC key to exit
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                showExitScreen();
+            }
+        });
+
+        // Timer countdown
+        let hours = 23;
+        let minutes = 59;
+        let seconds = 42;
+
+        function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            if (timerElement) {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) {
+                            hours = 0;
+                            minutes = 0;
+                            seconds = 0;
+                        }
+                    }
+                }
+                
+                const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                timerElement.textContent = `ОСТАЛОСЬ: ${formattedTime}`;
+            }
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+
+        // Show exit screen
+        function showExitScreen() {
+            document.getElementById('ransomwareScreen').classList.add('hidden');
+            document.getElementById('exitScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
